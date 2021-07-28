@@ -10,25 +10,27 @@ import './App.css';
 function App() {
 
     const INGREDIENTS = [
-        {name: 'Meat', price: 50, image: MeatImage},
-        {name: 'Cheese', price: 20, image: CheeseImage},
-        {name: 'Salad', price: 5, image: SaladImage},
-        {name: 'Bacon', price: 30, image: BaconImage},
+        {name: 'Meat', price: 50},
+        {name: 'Cheese', price: 20},
+        {name: 'Salad', price: 5},
+        {name: 'Bacon', price: 30},
     ];
 
     const [ingredients, setIngredients] = useState([
-        {name: 'Meat', count: 0},
-        {name: 'Cheese', count: 0},
-        {name: 'Salad', count: 0},
-        {name: 'Bacon', count: 0},
+        {name: 'Meat', count: 0, image: MeatImage},
+        {name: 'Cheese', count: 0, image: CheeseImage},
+        {name: 'Salad', count: 0, image: SaladImage},
+        {name: 'Bacon', count: 0, image: BaconImage},
     ]);
 
-    const AddIngredients = () => {
-        setIngredients[0].count ++;
+    const AddIngredients = (index) => {
+        ingredients[index].count++;
+        setIngredients([... ingredients]);
     };
 
-    const removeIngredients = () => {
-
+    const removeIngredients = (index) => {
+        ingredients[index].count --;
+        setIngredients([...ingredients]);
     };
 
     return (
@@ -36,10 +38,9 @@ function App() {
             <fieldset>
                 <legend>Ingredients</legend>
 
-                <Card ingredient="Meat" img={MeatImage} amount={ingredients[0].count} add={() => {AddIngredients()}}/>
-                <Card ingredient="Cheese" img={CheeseImage} amount={ingredients[1].count}/>
-                <Card ingredient="Salad" img={SaladImage} amount={ingredients[2].count}/>
-                <Card ingredient="Bacon" img={BaconImage} amount={ingredients[3].count}/>
+                {ingredients.map ((ingredient, index) => {
+                        return <Card ingredient={ingredient.name} img={ingredient.image} amount={ingredient.count} add={() => {AddIngredients(index)}} remove={() => {removeIngredients(index)}}/>
+                })}
 
             </fieldset>
 
