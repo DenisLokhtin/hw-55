@@ -4,34 +4,39 @@ import CheeseImage from './assets/cheese.png';
 import SaladImage from './assets/salad.png';
 import BaconImage from './assets/bacon.png';
 import Card from "./components/card";
+import Price from "./components/price";
+import BreadTop from "./components/breadTop"
 import './burger.css'
 import './App.css';
 
 function App() {
 
-    const INGREDIENTS = [
-        {name: 'Meat', price: 50},
-        {name: 'Cheese', price: 20},
-        {name: 'Salad', price: 5},
-        {name: 'Bacon', price: 30},
-    ];
-
     const [ingredients, setIngredients] = useState([
-        {name: 'Meat', count: 0, image: MeatImage},
-        {name: 'Cheese', count: 0, image: CheeseImage},
-        {name: 'Salad', count: 0, image: SaladImage},
-        {name: 'Bacon', count: 0, image: BaconImage},
+        {name: 'Meat', count: 0, image: MeatImage, price: 50, currentPrice: 0},
+        {name: 'Cheese', count: 0, image: CheeseImage, price: 20, currentPrice: 0},
+        {name: 'Salad', count: 0, image: SaladImage, price: 5, currentPrice: 0},
+        {name: 'Bacon', count: 0, image: BaconImage, price: 30, currentPrice: 0},
+    ]);
+
+    const [price, setPrice] = useState([
+        20
     ]);
 
     const AddIngredients = (index) => {
+        ingredients[index].currentPrice = ingredients[index].count * ingredients[index].price
+        const sum = ingredients[index].currentPrice.reduce((total, amount) => total + amount);
+        setPrice([sum])
         ingredients[index].count++;
         setIngredients([... ingredients]);
     };
 
     const removeIngredients = (index) => {
-        ingredients[index].count --;
-        setIngredients([...ingredients]);
+        if (ingredients[index].count > 0) {
+            ingredients[index].count--;
+            setIngredients([...ingredients]);
+        }
     };
+
 
     return (
         <div className="container">
@@ -48,14 +53,22 @@ function App() {
                 <legend>Burger</legend>
 
                 <div className="Burger">
-                    <div className="BreadTop">
-                        <div className="Seeds1"/>
-                        <div className="Seeds2"/>
-                    </div>
+
+                    <BreadTop/>
+
+                    {ingredients.map ((ingredient, index) => {
+                        const renderIngredient = []
+                        for (let i=0; i < ingredient.count; i++) {
+                            renderIngredient.push(<div className={ingredient.name}/>);
+                        }
+                        return renderIngredient
+                    })}
+
                     <div className="BreadBottom"/>
+
                 </div>
 
-                <p>price: 20</p>
+                <Price price={price}/>
 
             </fieldset>
         </div>
