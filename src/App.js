@@ -6,6 +6,7 @@ import BaconImage from './assets/bacon.png';
 import Card from "./components/card";
 import Price from "./components/price";
 import BreadTop from "./components/breadTop"
+import Ingredient from "./components/ingredient"
 import './burger.css'
 import './App.css';
 
@@ -18,21 +19,28 @@ function App() {
         {name: 'Bacon', count: 0, image: BaconImage, price: 30, currentPrice: 0},
     ]);
 
-    const [price, setPrice] = useState([
-        20
-    ]);
+    const [price, setPrice] = useState(20);
+
+    const updatePrice = (index) => {
+        ingredients[index].currentPrice = ingredients[index].count * ingredients[index].price;
+        const sum = ingredients.reduce((sum, ingredient) => {
+            return ingredient.currentPrice + sum
+        }, 20)
+
+        setPrice(sum)
+    }
 
     const AddIngredients = (index) => {
-        ingredients[index].currentPrice = ingredients[index].count * ingredients[index].price
-        const sum = ingredients[index].currentPrice.reduce((total, amount) => total + amount);
-        setPrice([sum])
+
         ingredients[index].count++;
+        updatePrice(index)
         setIngredients([... ingredients]);
     };
 
     const removeIngredients = (index) => {
         if (ingredients[index].count > 0) {
             ingredients[index].count--;
+            updatePrice(index)
             setIngredients([...ingredients]);
         }
     };
@@ -59,7 +67,7 @@ function App() {
                     {ingredients.map ((ingredient, index) => {
                         const renderIngredient = []
                         for (let i=0; i < ingredient.count; i++) {
-                            renderIngredient.push(<div className={ingredient.name}/>);
+                            renderIngredient.push(<Ingredient ingredient={ingredient.name}/>);
                         }
                         return renderIngredient
                     })}
